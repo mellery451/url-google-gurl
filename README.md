@@ -5,4 +5,13 @@ This project provides basic perl bindings for some portions of the standards com
 
 The google-url project is hosted [here](http://code.google.com/p/google-url/). We have included the necessary source code here for convenient building of the module and will endeavor to keep the sources up to date with the source project.
 
+Basic build instructions
+-------------------------
+
+clone the repository and cd to the project directory. Then:
+
+  perl Build.PL
+  ./Build
+  prove -b -l -v (to run tests)
+
 
