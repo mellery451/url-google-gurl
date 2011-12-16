@@ -10,8 +10,7 @@ Basic build instructions
 
 clone the repository and cd to the project directory. Then:
 
-  perl Build.PL
-  ./Build
-  prove -b -l -v (to run tests)
-
+    perl Build.PL
+    ./Build
+    prove -b -l -v (to run tests)
 
