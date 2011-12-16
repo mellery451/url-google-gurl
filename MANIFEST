@@ -1,6 +1,7 @@
 Changes
 Build.PL
 MANIFEST
+README.md
 xsp/GURL.xsp
 xsp/mytype.map
 src/ppport.h
