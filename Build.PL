@@ -2,7 +2,10 @@ use 5.012;
 use Module::Build::WithXSpp;
 use Devel::CheckLib;
 
-check_lib_or_exit(lib => [qw(icuuc icuio icudata icui18n)]);
+unless (check_lib(lib => [qw(icuuc icuio icudata icui18n)])) {
+    warn "unable to find ICU libraries. Please install them in your system path before proceeding";
+    exit(0);
+}
 
 my $build = Module::Build::WithXSpp->new(
     module_name       => 'URL::Google::GURL',
