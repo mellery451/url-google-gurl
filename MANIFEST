@@ -49,3 +49,5 @@ t/02-basic_perf.t
 t/03-scheme_is.t
 t/04-google_gurl_tests.t
 lib/URL/Google/GURL.pm
+META.yml
+META.json

@@ -3,7 +3,7 @@ use 5.008;
 use strict;
 use warnings;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 require XSLoader;
 XSLoader::load('URL::Google::GURL', $VERSION);
@@ -13,7 +13,7 @@ __END__
 
 =head1 NAME
 
-URL::Google::GURL - GURL class from the Google url library.
+URL::Google::GURL - GURL class implementation from the Google URL library.
 
 =head1 SYNOPSIS
 
@@ -41,10 +41,15 @@ URL::Google::GURL - GURL class from the Google url library.
 
 =head1 DESCRIPTION
 
-This module provides a partial XS export of the GURL class from
-the google url library (L<http://code.google.com/p/google-url/>).
-The code in this module must be synchronized with the source project
-manually. As such, it may not always be in-sync with the original sources.
+This module provides an export of the GURL class from
+the standards compliant, high performance google url library (c++)
+(project hosted at L<http://code.google.com/p/google-url/>). The GURL class
+is a convenient high-level abstraction for parsing and canonicalizing standard
+urls.
+
+The google url library source code is included in this module distribution.
+The code is manually synchronized with the primary source
+project and will therefore lag the project source in updates.
 
 =head1 AUTHOR
 
@@ -52,5 +57,9 @@ Mike Ellery
 
 =head1 COPYRIGHT AND LICENSE
 
+Copyright 2011 Michael Ellery.
+
+This module is free-as-in-speech software, and may be used, distributed,
+and modified under the same conditions as perl itself.
 
 =cut

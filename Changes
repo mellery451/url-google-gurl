@@ -4,3 +4,6 @@ Revision history for Perl extension Google::URL::GURL.
 	- original version; created by h2xs 1.23 with options
 		-A -n URL::Google::GURL
 
+0.02  Tue Dec 20 09:01:00 2011
+    - corrected build dependency 
+    - updated perldoc
