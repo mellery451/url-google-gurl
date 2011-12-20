@@ -51,6 +51,15 @@ The google url library source code is included in this module distribution.
 The code is manually synchronized with the primary source
 project and will therefore lag the project source in updates.
 
+=head1 PREREQUISITES
+
+In addition to a few perl dependencies, this module requires the ICU libraries
+for building and execution (L<http://site.icu-project.org/download>).
+If precompiled packages are availble for your system, that is the easiest way
+to install (be sure to include the development headers). Otherwise, you can
+consider using one of the precompiled binary packages available on the project
+site or you can build from source.
+
 =head1 AUTHOR
 
 Mike Ellery
