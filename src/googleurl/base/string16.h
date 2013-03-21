@@ -51,7 +51,7 @@
 // of carrying UTF-16-encoded data.
 
 #include <string>
-#include <cstdio>
+
 #include "base/basictypes.h"
 
 #ifdef WIN32

@@ -3,7 +3,7 @@ use warnings;
 use utf8;
 use Carp;
 
-use Test::More tests => 241;
+use Test::More tests => 244;
 
 use_ok('URL::Google::GURL');
 
@@ -134,10 +134,15 @@ ok( check_spec(
       method_args => ['http:google.com'],
       expected => 'http://google.com/')->is_valid() == 1);
 ok( check_spec(
-      url => 'data:/blahblah',
+      url => 'filesystem:http://www.google.com/type/',
       method => 'resolve',
-      method_args => ['file.html'],
-      expected => '')->is_valid() == 0);
+      method_args => ['foo.html'],
+      expected => 'filesystem:http://www.google.com/type/foo.html')->is_valid() == 1);
+ok( check_spec(
+      url => 'filesystem:http://www.google.com/type/',
+      method => 'resolve',
+      method_args => ['../foo.html'],
+      expected => 'filesystem:http://www.google.com/type/foo.html')->is_valid() == 1);
 
 note('get_origin validation...');
 check_spec(url => 'http://www.google.com', expected => 'http://www.google.com/', method => 'get_origin');

@@ -170,6 +170,7 @@ CanonHostInfo::Family IPv4ComponentToNumber(
 
   // Use the 64-bit strtoi so we get a big number (no hex, decimal, or octal
   // number can overflow a 64-bit number in <= 16 characters).
+#define uint64 uint64_t
   uint64 num = _strtoui64(buf, NULL, BaseForType(base));
 
   // Check for 32-bit overflow.
@@ -179,26 +180,6 @@ CanonHostInfo::Family IPv4ComponentToNumber(
   // No overflow.  Success!
   *number = static_cast<uint32>(num);
   return CanonHostInfo::IPV4;
-}
-
-// Writes the given address (with each character representing one dotted
-// part of an IPv4 address) to the output, and updating |*out_host| to
-// identify the added portion.
-void AppendIPv4Address(const unsigned char address[4],
-                       CanonOutput* output,
-                       url_parse::Component* out_host) {
-  out_host->begin = output->length();
-  for (int i = 0; i < 4; i++) {
-    char str[16];
-    _itoa_s(address[i], str, 10);
-
-    for (int ch = 0; str[ch] != 0; ch++)
-      output->push_back(str[ch]);
-
-    if (i != 3)
-      output->push_back('.');
-  }
-  out_host->len = output->length() - out_host->begin;
 }
 
 // See declaration of IPv4AddressToNumber for documentation.
@@ -281,7 +262,9 @@ bool DoCanonicalizeIPv4Address(const CHAR* spec,
   switch (host_info->family) {
     case CanonHostInfo::IPV4:
       // Definitely an IPv4 address.
-      AppendIPv4Address(host_info->address, output, &host_info->out_host);
+      host_info->out_host.begin = output->length();
+      AppendIPv4Address(host_info->address, output);
+      host_info->out_host.len = output->length() - host_info->out_host.begin;
       return true;
     case CanonHostInfo::BROKEN:
       // Definitely broken.
@@ -623,13 +606,36 @@ bool DoCanonicalizeIPv6Address(const CHAR* spec,
 
   host_info->out_host.begin = output->length();
   output->push_back('[');
+  AppendIPv6Address(host_info->address, output);
+  output->push_back(']');
+  host_info->out_host.len = output->length() - host_info->out_host.begin;
 
-  // We will now output the address according to the rules in:
+  host_info->family = CanonHostInfo::IPV6;
+  return true;
+}
+
+}  // namespace
+
+void AppendIPv4Address(const unsigned char address[4], CanonOutput* output) {
+  for (int i = 0; i < 4; i++) {
+    char str[16];
+    _itoa_s(address[i], str, 10);
+
+    for (int ch = 0; str[ch] != 0; ch++)
+      output->push_back(str[ch]);
+
+    if (i != 3)
+      output->push_back('.');
+  }
+}
+
+void AppendIPv6Address(const unsigned char address[16], CanonOutput* output) {
+  // We will output the address according to the rules in:
   // http://tools.ietf.org/html/draft-kawamura-ipv6-text-representation-01#section-4
 
   // Start by finding where to place the "::" contraction (if any).
   url_parse::Component contraction_range;
-  ChooseIPv6ContractionRange(host_info->address, &contraction_range);
+  ChooseIPv6ContractionRange(address, &contraction_range);
 
   for (int i = 0; i <= 14;) {
     // We check 2 bytes at a time, from bytes (0, 1) to (14, 15), inclusive.
@@ -641,8 +647,8 @@ bool DoCanonicalizeIPv6Address(const CHAR* spec,
       output->push_back(':');
       i = contraction_range.end();
     } else {
-      // Consume the next 16 bits from |host_info->address|.
-      int x = host_info->address[i] << 8 | host_info->address[i + 1];
+      // Consume the next 16 bits from |address|.
+      int x = address[i] << 8 | address[i + 1];
 
       i += 2;
 
@@ -657,15 +663,7 @@ bool DoCanonicalizeIPv6Address(const CHAR* spec,
         output->push_back(':');
     }
   }
-
-  output->push_back(']');
-  host_info->out_host.len = output->length() - host_info->out_host.begin;
-
-  host_info->family = CanonHostInfo::IPV6;
-  return true;
 }
-
-}  // namespace
 
 bool FindIPv4Components(const char* spec,
                         const url_parse::Component& host,
@@ -729,6 +727,5 @@ bool IPv6AddressToNumber(const char16* spec,
                          unsigned char address[16]) {
   return DoIPv6AddressToNumber<char16, char16>(spec, host, address);
 }
-
 
 }  // namespace url_canon

@@ -9,7 +9,7 @@
 #include <strstream>
 #ifdef WIN32
 #include <tchar.h>
-#else 
+#else
 #define TCHAR char
 #endif
 
